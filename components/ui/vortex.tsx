@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useCallback } from "react";
 import { createNoise3D } from "simplex-noise";
 import { motion } from "framer-motion";
 
@@ -46,9 +46,7 @@ export const Vortex = (props: VortexProps) =>
     let particleProps = new Float32Array(particlePropsLength);
     const center: [number, number] = [0, 0];
 
-   // const HALF_PI: number = 0.5 * Math.PI;
     const TAU: number = 2 * Math.PI;
-  //  const TO_RAD: number = Math.PI / 180;
     const rand = (n: number): number => n * Math.random();
     const randRange = (n: number): number => n - rand(2 * n);
     const fadeInOut = (t: number, m: number): number =>
@@ -59,7 +57,18 @@ export const Vortex = (props: VortexProps) =>
     const lerp = (n1: number, n2: number, speed: number): number =>
         (1 - speed) * n1 + speed * n2;
 
-    const setup = () =>
+    const resize = useCallback((canvas: HTMLCanvasElement) =>
+    {
+        const { innerWidth, innerHeight } = window;
+
+        canvas.width = innerWidth;
+        canvas.height = innerHeight;
+
+        center[0] = 0.5 * canvas.width;
+        center[1] = 0.5 * canvas.height;
+    }, []);
+
+    const setup = useCallback(() =>
     {
         const canvas = canvasRef.current;
         const container = containerRef.current;
@@ -69,17 +78,16 @@ export const Vortex = (props: VortexProps) =>
 
             if (ctx)
             {
-                resize(canvas, ctx);
+                resize(canvas);
                 initParticles();
                 draw(canvas, ctx);
             }
         }
-    };
+    }, [resize]);
 
     const initParticles = () =>
     {
         tick = 0;
-        // simplex = new SimplexNoise();
         particleProps = new Float32Array(particlePropsLength);
 
         for (let i = 0; i < particlePropsLength; i += particlePropCount)
@@ -92,8 +100,6 @@ export const Vortex = (props: VortexProps) =>
     {
         const canvas = canvasRef.current;
         if (!canvas) return;
-
-        // let  y, vx, vy, life, ttl, speed, radius, hue;
 
         const x = rand(canvas.width);
         const y = center[1] + randRange(rangeY);
@@ -145,7 +151,6 @@ export const Vortex = (props: VortexProps) =>
             i7 = 6 + i,
             i8 = 7 + i,
             i9 = 8 + i;
-        //  let n, x, y, vx,vy, life, ttl, speed, x2, y2, radius, hue;
 
         const x = particleProps[i];
         const y = particleProps[i2];
@@ -170,7 +175,7 @@ export const Vortex = (props: VortexProps) =>
         particleProps[i4] = vy;
         particleProps[i5] = life;
 
-        if ((checkBounds(x, y, canvas) || life > ttl))
+        if (checkBounds(x, y, canvas) || life > ttl)
         {
             initParticle(i);
         }
@@ -203,20 +208,6 @@ export const Vortex = (props: VortexProps) =>
     const checkBounds = (x: number, y: number, canvas: HTMLCanvasElement) =>
     {
         return x > canvas.width || x < 0 || y > canvas.height || y < 0;
-    };
-
-    const resize = (
-        canvas: HTMLCanvasElement,
-        ctx?: CanvasRenderingContext2D
-    ) =>
-    {
-        const { innerWidth, innerHeight } = window;
-
-        canvas.width = innerWidth;
-        canvas.height = innerHeight;
-
-        center[0] = 0.5 * canvas.width;
-        center[1] = 0.5 * canvas.height;
     };
 
     const renderGlow = (
@@ -254,13 +245,24 @@ export const Vortex = (props: VortexProps) =>
         window.addEventListener("resize", () =>
         {
             const canvas = canvasRef.current;
-            const ctx = canvas?.getContext("2d");
-            if (canvas && ctx)
+            if (canvas)
             {
-                resize(canvas, ctx);
+                resize(canvas);
             }
         });
-    }, []);
+
+        return () =>
+        {
+            window.removeEventListener("resize", () =>
+            {
+                const canvas = canvasRef.current;
+                if (canvas)
+                {
+                    resize(canvas);
+                }
+            });
+        };
+    }, [resize, setup]);
 
     return (
         <div className={cn("relative h-full w-full", props.containerClassName)}>
