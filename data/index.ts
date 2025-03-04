@@ -135,16 +135,18 @@ export const portfolioData: PortfolioData = {
             src: "/profile.jpg",
         },
     ],
-    footer:
-        [
+    footer: {
+        email: "your.email@example.com", // Add your email here
+        socialLinks: [
             { name: "GitHub", url: "https://github.com/tilahungoito", icon: "/github.svg" },
-            { name: "linkedin", url: "https://linkedin.com/profile/", icon: "/linkedin.svg" },
+            { name: "LinkedIn", url: "https://linkedin.com/profile/", icon: "/linkedin.svg" },
             { name: "Instagram", url: "https://instagram.com/yourusername", icon: "/instagram.svg" },
             { name: "Facebook", url: "https://leetcode.com/profile/", icon: "/facebook.svg" },
             { name: "TikTok", url: "https://tiktok.com/@yourusername", icon: "/tiktok.svg" },
             { name: "Twitter", url: "https://twitter.com/yourusername", icon: "/twitter.svg" },
         ],
-
-
+    },
 };
+
+
 

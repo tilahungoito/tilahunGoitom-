@@ -1,16 +1,18 @@
+"use client"; // Add this if you're using client-side features
+
 import { portfolioData } from "@/data";
 import Image from "next/image";
 
 export default function Footer()
 {
     return (
-        <footer className="py-8 bg-gradient-to-r from-gray-900 to-gray-800 text-white text-center flex w-full">
+        <footer className="py-8 bg-gradient-to-r from-gray-900 to-gray-800 text-white text-center flex flex-col items-center w-full">
             {/* Divider Line */}
             <div className="w-24 h-1 bg-purple-500 mx-auto mb-5 rounded-full"></div>
 
             {/* Social Media Icons */}
             <div className="flex justify-center gap-6">
-                {portfolioData.footer.map((social, index) => (
+                {portfolioData.footer.socialLinks.map((social, index) => (
                     <a
                         key={index}
                         href={social.url}
@@ -27,6 +29,16 @@ export default function Footer()
                         />
                     </a>
                 ))}
+            </div>
+
+            {/* Email Link */}
+            <div className="mt-5">
+                <a
+                    href={`mailto:${portfolioData.footer.email}`}
+                    className="text-gray-400 text-sm hover:text-purple-500 transition-colors duration-300"
+                >
+                    {portfolioData.footer.email}
+                </a>
             </div>
 
             {/* Copyright */}

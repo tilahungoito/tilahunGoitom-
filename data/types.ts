@@ -55,5 +55,8 @@ export interface PortfolioData
     };
     projects: Project[];
     testimonials: Testimonial[];
-    footer: socialLinks[];
+    footer: {
+        email: string; // Add email here
+        socialLinks: socialLinks[]; // Keep the existing socialLinks array
+    };
 }
