@@ -136,7 +136,7 @@ export const portfolioData: PortfolioData = {
         },
     ],
     footer: {
-        email: "your.email@example.com", // Add your email here
+        email: "tilay1921@gmail.com", // Add your email here
         socialLinks: [
             { name: "GitHub", url: "https://github.com/tilahungoito", icon: "/github.svg" },
             { name: "LinkedIn", url: "https://linkedin.com/profile/", icon: "/linkedin.svg" },
